@@ -34,3 +34,9 @@ func Spaces_to_ints(data []string) [][]int {
 	}
 	return out
 }
+
+func ReadFile(path string) string {
+	data, _ := os.ReadFile(path)
+	as_string := string(data)
+	return as_string
+}
