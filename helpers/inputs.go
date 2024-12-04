@@ -35,6 +35,15 @@ func Spaces_to_ints(data []string) [][]int {
 	return out
 }
 
+func StringsToChars(data []string) [][]string {
+	out := make([][]string, 0)
+	for _, v := range data {
+		as_char := strings.Split(v, "")
+		out = append(out, as_char)
+	}
+	return out
+}
+
 func ReadFile(path string) string {
 	data, _ := os.ReadFile(path)
 	as_string := string(data)
