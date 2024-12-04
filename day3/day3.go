@@ -46,6 +46,6 @@ func part2(data string) int {
 
 func main() {
 	data := helpers.ReadFile("input.txt")
-	// fmt.Println(part1(data))
+	fmt.Println(part1(data))
 	fmt.Println(part2(data))
 }
