@@ -82,13 +82,13 @@ func partTwo(data [][]string, startRow int, startCol int) int {
 func partOne(data [][]string) (int, int) {
 	total := 0
 	total2 := 0
-	// dirs := [8][2]int{{0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}
+	dirs := [8][2]int{{0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}
 	for row := 0; row < len(data); row++ {
 		for col := 0; col < len(data[row]); col++ {
 			total2 += checkX(data, row, col)
-			// for _, dir := range dirs {
-			// 	total += checkDirection(data, row, col, dir)
-			// }
+			for _, dir := range dirs {
+				total += checkDirection(data, row, col, dir)
+			}
 		}
 	}
 	return total, total2
@@ -99,5 +99,3 @@ func main() {
 	asChars := helpers.StringsToChars(asLines)
 	fmt.Println(partOne(asChars))
 }
-
-// 2305 is too high
