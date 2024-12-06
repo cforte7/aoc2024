@@ -67,7 +67,6 @@ func partTwo(page []int, rules map[int]map[int]bool) int {
 		out = append(out, newVal)
 	}
 	out = append(out, toAdd[0])
-	fmt.Println(out)
 	return getMiddle(out)
 }
 
