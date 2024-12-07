@@ -22,7 +22,6 @@ func leavingMap(pos, dir [2]int, data [][]string) bool {
 	maxCol := len(data[0]) - 1
 	nextPos := getNextPost(pos, dir)
 
-	fmt.Println("leaving", maxRow, maxCol, pos)
 	if nextPos[0] == -1 || nextPos[1] == -1 || nextPos[0] == maxRow+1 || nextPos[1] == maxCol+1 {
 		return true
 	}
@@ -32,11 +31,8 @@ func leavingMap(pos, dir [2]int, data [][]string) bool {
 func canContinue(pos, dir [2]int, data [][]string) bool {
 	nextRow := pos[0] + dir[0]
 	nextCol := pos[1] + dir[1]
-	if data[nextRow][nextCol] == "#" {
-		return false
-	}
 
-	return true
+	return data[nextRow][nextCol] != "#"
 }
 
 func getNextPost(pos, dir [2]int) [2]int {
@@ -50,25 +46,17 @@ func rotateDir(dir [2]int) [2]int {
 func dayOne(data [][]string) int {
 	pos := findStart(data)
 	dir := [2]int{-1, 0}
+	visited := make(map[[2]int]bool)
 	for !leavingMap(pos, dir, data) {
-		data[pos[0]][pos[1]] = "X"
+		visited[[2]int{pos[0], pos[1]}] = true
 		if !canContinue(pos, dir, data) {
 			dir = rotateDir(dir)
 		}
 		pos = getNextPost(pos, dir)
 	}
 
-	data[pos[0]][pos[1]] = "X"
-
-	total := 0
-	for _, v := range data {
-		for _, vv := range v {
-			if vv == "X" {
-				total += 1
-			}
-		}
-	}
-	return total
+	visited[[2]int{pos[0], pos[1]}] = true
+	return len(visited)
 }
 
 func main() {
