@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/cforte7/aoc2024/helpers"
 )
@@ -52,13 +53,12 @@ func isCycle(data [][]string, obs [2]int) int {
 	dir := [2]int{-1, 0}
 	for !leavingMap(pos, dir, dupe) {
 		posAndDir := [4]int{pos[0], pos[1], dir[0], dir[1]}
-
-		_, weveBeenHere := visited[posAndDir]
+		weveBeenHere := visited[posAndDir]
 		if weveBeenHere {
 			return 1
 		}
 		visited[posAndDir] = true
-		if !canContinue(pos, dir, dupe) {
+		for !canContinue(pos, dir, dupe) {
 			dir = rotateDir(dir)
 		}
 		pos = getNextPost(pos, dir)
@@ -105,10 +105,11 @@ func dayOne(data [][]string) (int, map[[2]int]bool) {
 func main() {
 	data := helpers.Txt_to_lines("input.txt")
 	asChars := helpers.StringsToChars(data)
+	charDupe := makeDuplicate(asChars)
 
 	res, visited := dayOne(asChars)
-	res2 := dayTwo(asChars, visited)
+	start := time.Now().UnixMicro()
+	res2 := dayTwo(charDupe, visited)
+	fmt.Println(time.Now().UnixMicro() - start)
 	fmt.Println(res, res2)
 }
-
-// 1938 is too high
