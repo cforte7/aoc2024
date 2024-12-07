@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
@@ -13,15 +14,18 @@ type Problem struct {
 	Solution int
 }
 
-func (p *Problem) CanBeSolved() bool {
-	return false
-}
-
-func (p *Problem) getScore() int {
-	if p.CanBeSolved() {
-		return p.Solution
+func CanBeSolved(solu, tot int, args []int) bool {
+	if len(args) == 0 {
+		return solu == tot
 	}
-	return 0
+
+	toApply := args[0]
+	restArgs := args[1:]
+
+	multTot := tot * toApply
+	addTot := tot + toApply
+
+	return CanBeSolved(solu, multTot, restArgs) || CanBeSolved(solu, addTot, restArgs)
 }
 
 func parseData(data []string) []Problem {
@@ -38,13 +42,18 @@ func parseData(data []string) []Problem {
 func partOne(data []Problem) int {
 	total := 0
 	for _, v := range data {
-		total += v.getScore()
+		startVal := v.Args[0]
+		restArgs := v.Args[1:]
+		if CanBeSolved(v.Solution, startVal, restArgs) {
+			total += v.Solution
+		}
 	}
 	return total
 }
 
 func main() {
-	data := helpers.Txt_to_lines("test.txt")
+	path := os.Args[1]
+	data := helpers.Txt_to_lines(path)
 	parsedData := parseData(data)
 	ans1 := partOne(parsedData)
 	fmt.Println(ans1)
