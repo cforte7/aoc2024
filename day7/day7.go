@@ -14,9 +14,9 @@ type Problem struct {
 	Solution int
 }
 
-func CanBeSolved(solu, tot int, args []int) bool {
+func CanBeSolved(tot int, args []int) int {
 	if len(args) == 0 {
-		return solu == tot
+		return tot
 	}
 
 	toApply := args[0]
@@ -24,6 +24,7 @@ func CanBeSolved(solu, tot int, args []int) bool {
 
 	multTot := tot * toApply
 	addTot := tot + toApply
+	// concatTot := strconv.Itoa(tot) + strconv.Itoa()
 
 	return CanBeSolved(solu, multTot, restArgs) || CanBeSolved(solu, addTot, restArgs)
 }
@@ -44,7 +45,7 @@ func partOne(data []Problem) int {
 	for _, v := range data {
 		startVal := v.Args[0]
 		restArgs := v.Args[1:]
-		if CanBeSolved(v.Solution, startVal, restArgs) {
+		if CanBeSolved(startVal, restArgs) == v.Solution {
 			total += v.Solution
 		}
 	}
@@ -58,3 +59,7 @@ func main() {
 	ans1 := partOne(parsedData)
 	fmt.Println(ans1)
 }
+
+// 17 || 8 + 14
+// 17 || 22
+// 1722
