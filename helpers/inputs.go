@@ -23,6 +23,16 @@ func Txt_to_lines(path string) []string {
 	return BufferToLines(as_string)
 }
 
+func ListAtoi(row string) []int {
+	s := strings.Fields(row)
+	l := make([]int, 0)
+	for _, vi := range s {
+		num, _ := strconv.Atoi(vi)
+		l = append(l, num)
+	}
+	return l
+}
+
 func Spaces_to_ints(data []string) [][]int {
 	// turn something like ["5 2", "1  2   3 4"] into [[5,2],[1,2,3,4]]
 	out := make([][]int, 0)
