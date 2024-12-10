@@ -27,7 +27,9 @@ func calcChecksum(data []Segment) int {
 	checksum := 0
 	for _, v := range data {
 		for i := 0; i < v.Size; i++ {
-			checksum += index * v.Id
+			if v.Id != -1 {
+				checksum += index * v.Id
+			}
 			index += 1
 		}
 	}
@@ -74,6 +76,36 @@ func partOne(data []Segment) int {
 	return calcChecksum(out)
 }
 
+func partTwo(data []Segment) int {
+	toMove := len(data) - 1
+	for toMove >= 0 {
+		// find the next data segment
+		for data[toMove].Id == -1 || data[toMove].Size == 0 {
+			toMove--
+		}
+		dest := 0
+
+		for dest < toMove {
+			if data[dest].Id == -1 && data[dest].Size >= data[toMove].Size {
+
+				segToMove := Segment{Id: data[toMove].Id, Size: data[toMove].Size}
+				newEmptySpace := Segment{Size: data[dest].Size - data[toMove].Size, Id: -1}
+				newData := make([]Segment, 0)
+				newData = append(newData, data[:dest]...)
+				newData = append(newData, segToMove, newEmptySpace)
+				data[toMove] = Segment{Id: -1, Size: data[toMove].Size}
+				newData = append(newData, data[dest+1:]...)
+				data = newData
+				toMove++
+				break
+			}
+			dest++
+		}
+		toMove--
+	}
+	return calcChecksum(data)
+}
+
 type Segment struct {
 	Id   int
 	Size int
@@ -98,6 +130,9 @@ func parseInput(data []byte) []Segment {
 
 func main() {
 	data, _ := os.ReadFile(os.Args[1])
+
 	asSeg := parseInput(data)
 	fmt.Println(partOne(asSeg))
+	asSegTwo := parseInput(data)
+	fmt.Println(partTwo(asSegTwo))
 }
