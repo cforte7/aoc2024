@@ -12,19 +12,12 @@ func findPeaks(i, j int, peaks [][2]int, data [][]int) [][2]int {
 		return append(peaks, [2]int{i, j})
 	}
 
-	// up
-	if helpers.IsInBounds(i+1, j, data) && data[i+1][j] == data[i][j]+1 {
-		peaks = findPeaks(i+1, j, peaks, data)
-	}
-
-	if helpers.IsInBounds(i-1, j, data) && data[i-1][j] == data[i][j]+1 {
-		peaks = findPeaks(i-1, j, peaks, data)
-	}
-	if helpers.IsInBounds(i, j+1, data) && data[i][j+1] == data[i][j]+1 {
-		peaks = findPeaks(i, j+1, peaks, data)
-	}
-	if helpers.IsInBounds(i, j-1, data) && data[i][j-1] == data[i][j]+1 {
-		peaks = findPeaks(i, j-1, peaks, data)
+	for _, v := range [][2]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}} {
+		nextRow := i + v[0]
+		nextCol := j + v[1]
+		if helpers.IsInBounds(nextRow, nextCol, data) && data[nextRow][nextCol] == data[i][j]+1 {
+			peaks = findPeaks(i+v[0], j+v[1], peaks, data)
+		}
 	}
 	return peaks
 }
