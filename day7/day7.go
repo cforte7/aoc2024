@@ -20,12 +20,13 @@ func CanBeSolved(tot int, args []int) int {
 	}
 
 	toApply := args[0]
+	restArgs := args[1:]
 
 	multTot := tot * toApply
 	addTot := tot + toApply
 	// concatTot := strconv.Itoa(tot) + strconv.Itoa()
 
-	return CanBeSolved(solu, multTot) || CanBeSolved(solu, addTot)
+	return CanBeSolved(multTot, restArgs) || CanBeSolved(addTot, restArgs)
 }
 
 func parseData(data []string) []Problem {
