@@ -16,7 +16,11 @@ func newPos(r, c int) Position {
 	return Position{row: r, col: c}
 }
 
-func getRegion(data [][]string, start Position, value string) ([]Position, int) {
+func getSideCount(fenceLoc [][2]Position) int {
+	return 0
+}
+
+func getRegion(data [][]string, start Position, value string) ([]Position, int, int) {
 	out := make([]Position, 0)
 	seen := make(map[Position]bool)
 	toVisit := make([]Position, 0)
@@ -40,13 +44,16 @@ func getRegion(data [][]string, start Position, value string) ([]Position, int) 
 		}
 	}
 
-	return out, len(outside) * len(out)
+	partOne := len(outside) * len(out)
+	partTwo := getSideCount(helpers.MapToSlice(outside))
+	return out, partOne, partTwo
 }
 
-func partOne(data [][]string) int {
+func partOne(data [][]string) (int, int) {
 	regions := make([][]Position, 0)
 	seen := make(map[Position]bool)
 	score := 0
+	score2 := 0
 	for row := range data {
 		for col := range data[0] {
 			pos := newPos(row, col)
@@ -54,16 +61,16 @@ func partOne(data [][]string) int {
 			if visted {
 				continue
 			}
-			newRegion, newScore := getRegion(data, pos, data[pos.row][pos.col])
+			newRegion, newScore, newScore2 := getRegion(data, pos, data[pos.row][pos.col])
 			regions = append(regions, newRegion)
 			score += newScore
+			score2 += newScore2
 			for _, newPos := range newRegion {
 				seen[newPos] = true
 			}
 		}
 	}
-	// this is wrong, its just to get the compiler to stfu
-	return score
+	return score, score2
 }
 
 func main() {
