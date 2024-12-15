@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"regexp"
 	"strconv"
+	"time"
 
 	"github.com/cforte7/aoc2024/helpers"
 )
@@ -84,6 +86,22 @@ func Print2DArray[T any](data [][]T) {
 	}
 }
 
+func DisplayRobots(robots []Robot) {
+	display := make([][]string, RowCount)
+	for i := range display {
+		newRow := make([]string, ColCount)
+		for j := range newRow {
+			newRow[j] = "."
+		}
+		display[i] = newRow
+	}
+	for _, v := range robots {
+		display[v.Pos.Y][v.Pos.X] = "X"
+	}
+
+	Print2DArray(display)
+}
+
 func partOne(robots []Robot) int {
 	quads := make(map[int]int)
 	quads[1] = 0
@@ -106,9 +124,50 @@ func partOne(robots []Robot) int {
 	return quads[1] * quads[2] * quads[3] * quads[4]
 }
 
+func calcDist(robots []Robot) float64 {
+	dist := 0.0
+	n := float64(len(robots))
+	for i := range robots {
+		x1 := robots[i].Pos.X
+		y1 := robots[i].Pos.Y
+		for j := i + 1; j < len(robots); j++ {
+
+			x2 := robots[j].Pos.X
+			y2 := robots[j].Pos.Y
+
+			dx := x2 - x1
+			dy := y2 - y1
+			d := float64(dx*dx + dy*dy)
+			dist += math.Sqrt(d)
+		}
+	}
+	return 2.0 * dist / (n * (n - 1.0))
+}
+
+func partTwo(robots []Robot, count int) {
+	fmt.Println(robots[0])
+	for i := 0; i < count; i++ {
+		for j := range robots {
+			robots[j].updatePos(1)
+		}
+
+		dist := calcDist(robots)
+		if dist < 40.0 {
+			fmt.Println(i+1, calcDist(robots))
+			DisplayRobots(robots)
+			time.Sleep(time.Millisecond * 500)
+
+		}
+	}
+}
+
 func main() {
 	path := os.Args[1]
+	count := os.Args[2]
+	countInt, _ := strconv.Atoi(count)
 	data := helpers.Txt_to_lines(path)
 	asRobots := parseInput(data)
 	fmt.Println(partOne(asRobots))
+	asRobots2 := parseInput(data)
+	partTwo(asRobots2, countInt)
 }
