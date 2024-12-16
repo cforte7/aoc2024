@@ -20,28 +20,55 @@ func findStart(data [][]string) helpers.Pos {
 }
 
 func combinePos(a, b helpers.Pos) helpers.Pos {
-	return helpers.Pos{Row: a.Row + b.Row, Col: a.Row + b.Row}
+	return helpers.Pos{Row: a.Row + b.Row, Col: a.Col + b.Col}
 }
 
-func executeMove(data *[][]string, move helpers.Pos, currPos *helpers.Pos) {
-	maybeNextPos := combinePos(*currPos, move)
-	if (*data)[maybeNextPos.Row][maybeNextPos.Col] == "." {
-		currPos = &maybeNextPos
+func executeMove(data *[][]string, move helpers.Pos) {
+	currPos := findStart(*data)
+	maybeNextPos := combinePos(currPos, move)
+
+	maybeNextChar := (*data)[maybeNextPos.Row][maybeNextPos.Col]
+	if maybeNextChar == "." {
+		(*data)[maybeNextPos.Row][maybeNextPos.Col] = "@"
+		(*data)[currPos.Row][currPos.Col] = "."
+		return
+	} else if maybeNextChar == "#" {
+		return
+	}
+	terminalPos := maybeNextPos
+	for (*data)[terminalPos.Row][terminalPos.Col] == "O" {
+		terminalPos = combinePos(terminalPos, move)
+	}
+	if (*data)[terminalPos.Row][terminalPos.Col] == "." {
+		(*data)[terminalPos.Row][terminalPos.Col] = "O"
+		(*data)[currPos.Row][currPos.Col] = "."
+		(*data)[maybeNextPos.Row][maybeNextPos.Col] = "@"
 	}
 }
 
-func partOne(data [][]string, cmds []helpers.Pos) int {
-	pos := findStart(data)
-
+func partOne(data *[][]string, cmds []helpers.Pos) int {
+	score := 0
 	for _, v := range cmds {
-		executeMove(&data, v, &pos)
+		executeMove(data, v)
 	}
-	return 0
+
+	for i, row := range *data {
+		for j, val := range row {
+			if val == "O" {
+				score += i*100 + j
+			}
+		}
+	}
+
+	return score
 }
 
 func parseCmds(cmds []string) []helpers.Pos {
 	out := make([]helpers.Pos, 0)
 	for _, v := range cmds {
+		if v == "\n" {
+			continue
+		}
 		var val helpers.Pos
 		switch v {
 		case "<":
@@ -52,6 +79,8 @@ func parseCmds(cmds []string) []helpers.Pos {
 			val = helpers.Pos{Row: 0, Col: 1}
 		case "v":
 			val = helpers.Pos{Row: 1, Col: 0}
+		default:
+			panic("invalid move")
 		}
 		out = append(out, val)
 	}
