@@ -87,6 +87,37 @@ func parseCmds(cmds []string) []helpers.Pos {
 	return out
 }
 
+func partTwoGrid(data [][]string) [][]string {
+	out := make([][]string, 0)
+	for _, row := range data {
+		newRow := make([]string, 0)
+		for _, value := range row {
+			switch value {
+			case "#":
+				newRow = append(newRow, "#")
+				newRow = append(newRow, "#")
+			case "O":
+				newRow = append(newRow, "[")
+				newRow = append(newRow, "]")
+			case ".":
+				newRow = append(newRow, ".")
+				newRow = append(newRow, ".")
+			case "@":
+				newRow = append(newRow, "@")
+				newRow = append(newRow, ".")
+			default:
+				panic("unknown character on map")
+			}
+		}
+		out = append(out, newRow)
+	}
+	return out
+}
+
+func partTwo(data *[][]string, cmds []helpers.Pos) int {
+	return 0
+}
+
 func main() {
 	path := os.Args[1]
 	asString, _ := os.ReadFile(path)
@@ -96,6 +127,9 @@ func main() {
 	commands := asSplit[1]
 	splitCommands := strings.Split(commands, "")
 	asChars := helpers.StringsToChars(helpers.BufferToLines(map_))
+	asChars2 := helpers.StringsToChars(helpers.BufferToLines(map_))
 	parsedCmds := parseCmds(splitCommands)
-	fmt.Println(partOne(&asChars, parsedCmds))
+	grid2 := partTwoGrid(asChars2)
+
+	fmt.Println(partOne(&asChars, parsedCmds), partTwo(&grid2, parsedCmds))
 }
