@@ -77,15 +77,6 @@ func parseInput(data []string) []Robot {
 	return out
 }
 
-func Print2DArray[T any](data [][]T) {
-	for _, v := range data {
-		for _, vv := range v {
-			fmt.Print(vv)
-		}
-		fmt.Println("")
-	}
-}
-
 func DisplayRobots(robots []Robot) {
 	display := make([][]string, RowCount)
 	for i := range display {
@@ -99,7 +90,7 @@ func DisplayRobots(robots []Robot) {
 		display[v.Pos.Y][v.Pos.X] = "X"
 	}
 
-	Print2DArray(display)
+	helpers.Print2DArray(display)
 }
 
 func partOne(robots []Robot) int {

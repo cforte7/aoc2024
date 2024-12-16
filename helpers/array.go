@@ -1,5 +1,17 @@
 package helpers
 
+import "fmt"
+
+type Pos struct {
+	Row int
+	Col int
+}
+
+func (p *Pos) CombinePos(incoming Pos) {
+	p.Row = p.Row + incoming.Row
+	p.Col = p.Col + incoming.Col
+}
+
 func IsInBounds[T any](row, col int, data [][]T) bool {
 	maxRow := len(data) - 1
 	maxCol := len(data[0]) - 1
@@ -22,4 +34,13 @@ func MapToSlice[K comparable, V any](incoming map[K]V) []K {
 		out = append(out, k)
 	}
 	return out
+}
+
+func Print2DArray[T any](data [][]T) {
+	for _, v := range data {
+		for _, vv := range v {
+			fmt.Print(vv)
+		}
+		fmt.Println("")
+	}
 }

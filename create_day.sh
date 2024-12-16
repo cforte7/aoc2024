@@ -17,9 +17,9 @@ fi
 # Create the folder
 folder="day$n"
 mkdir -p "$folder"
-
+echo $AOC_SESSION
 # Create the files
 cp "templ.go" "$folder/day$n.go"
-touch "$folder/test.txt" "$folder/input.txt"
-
+touch "$folder/test.txt"
+curl https://adventofcode.com/2024/day/$n/input --cookie "session=$AOC_SESSION" -A 'cforte7@gmail.com AOC day creation script' -o $folder/input.txt
 echo "Folder '$folder' and files created successfully."
